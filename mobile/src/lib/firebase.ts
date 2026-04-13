@@ -4,13 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCKdjs9dYmuToTHmbHOYpe3jq2v7MwrglQ",
-  authDomain: "trainifyconnect-a7c70.firebaseapp.com",
-  projectId: "trainifyconnect-a7c70",
-  storageBucket: "trainifyconnect-a7c70.firebasestorage.app",
-  messagingSenderId: "22076773317",
-  appId: "1:22076773317:web:14074217f77078eccb31ac",
-  measurementId: "G-H1YKQZMQ0K"
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.EXPO_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
