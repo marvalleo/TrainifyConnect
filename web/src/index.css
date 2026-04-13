@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* ============================================
+   TrainifyConnect Design System
+   Extracted from Stitch UI mockups
+   ============================================ */
+
+@theme {
+  /* ── Primary (Lime Neon) ── */
+  --color-tc-primary: #f3ffca;
+  --color-tc-primary-fixed: #cafd00;
+  --color-tc-primary-fixed-dim: #beee00;
+  --color-tc-primary-dim: #beee00;
+  --color-tc-primary-container: #cafd00;
+  --color-tc-on-primary: #516700;
+  --color-tc-on-primary-fixed: #3a4a00;
+  --color-tc-on-primary-fixed-variant: #526900;
+  --color-tc-on-primary-container: #4a5e00;
+  --color-tc-inverse-primary: #516700;
+
+  /* ── Secondary (Cyan) ── */
+  --color-tc-secondary: #00e3fd;
+  --color-tc-secondary-dim: #00d4ec;
+  --color-tc-secondary-fixed: #26e6ff;
+  --color-tc-secondary-fixed-dim: #00d7f0;
+  --color-tc-secondary-container: #006875;
+  --color-tc-on-secondary: #004d57;
+  --color-tc-on-secondary-fixed: #003a42;
+  --color-tc-on-secondary-fixed-variant: #005964;
+  --color-tc-on-secondary-container: #e8fbff;
+
+  /* ── Tertiary (Gold) ── */
+  --color-tc-tertiary: #ffeea5;
+  --color-tc-tertiary-dim: #edd13a;
+  --color-tc-tertiary-fixed: #fce047;
+  --color-tc-tertiary-fixed-dim: #edd13a;
+  --color-tc-tertiary-container: #fce047;
+  --color-tc-on-tertiary: #665800;
+  --color-tc-on-tertiary-fixed: #483d00;
+  --color-tc-on-tertiary-fixed-variant: #685900;
+  --color-tc-on-tertiary-container: #5d5000;
+
+  /* ── Error (Coral) ── */
+  --color-tc-error: #ff7351;
+  --color-tc-error-dim: #d53d18;
+  --color-tc-error-container: #b92902;
+  --color-tc-on-error: #450900;
+  --color-tc-on-error-container: #ffd2c8;
+
+  /* ── Surfaces (Dark Elevation) ── */
+  --color-tc-background: #0e0e0e;
+  --color-tc-surface: #0e0e0e;
+  --color-tc-surface-dim: #0e0e0e;
+  --color-tc-surface-bright: #2c2c2c;
+  --color-tc-surface-container-lowest: #000000;
+  --color-tc-surface-container-low: #131313;
+  --color-tc-surface-container: #1a1a1a;
+  --color-tc-surface-container-high: #20201f;
+  --color-tc-surface-container-highest: #262626;
+  --color-tc-surface-variant: #262626;
+  --color-tc-surface-tint: #f3ffca;
+  --color-tc-on-surface: #ffffff;
+  --color-tc-on-surface-variant: #adaaaa;
+  --color-tc-on-background: #ffffff;
+  --color-tc-inverse-surface: #fcf9f8;
+  --color-tc-inverse-on-surface: #565555;
+
+  /* ── Outlines ── */
+  --color-tc-outline: #767575;
+  --color-tc-outline-variant: #484847;
+
+  /* ── Typography ── */
+  --font-headline: "Space Grotesk", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  /* ── Border Radius (Ultra-sharp) ── */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  /* ── Spacing Scale ── */
+  --spacing-sidebar: 16rem;
+
+  /* ── Animations ── */
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── Glow Animation ── */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+/* ── Material Symbols Configuration ── */
+.material-symbols-outlined {
+  font-variation-settings:
+    "FILL" 0,
+    "wght" 400,
+    "GRAD" 0,
+    "opsz" 24;
+}
+
+/* ── Custom Scrollbar ── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: var(--color-tc-surface);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-tc-surface-container-highest);
+  border-radius: 10px;
+}
+
+/* ── Selection ── */
+::selection {
+  background-color: var(--color-tc-primary-container);
+  color: var(--color-tc-on-primary-container);
+}
+
+/* ── Body Base ── */
+body {
+  min-height: 100dvh;
+}
+
+/* ── Technical Grid Background ── */
+.technical-grid {
+  background-image: radial-gradient(circle, #262626 1px, transparent 1px);
+  background-size: 30px 30px;
+}

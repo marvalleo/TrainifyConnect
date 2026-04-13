@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Función para verificar si el usuario es el dueño del documento
+    function isOwner(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    // Reglas para la colección de atletas
+    match /athletes/{athleteId} {
+      allow read: if request.auth != null && (
+        isOwner(athleteId) || 
+        request.auth.uid == resource.data.coachId
+      );
+      
+      // Permitir actualización si es el dueño o está vinculando su cuenta por primera vez
+      allow update: if request.auth != null && (
+        isOwner(athleteId) || 
+        (resource.data.email == request.auth.token.email && (resource.data.uid == "" || !('uid' in resource.data)))
+      );
+
+      // Logs de entrenamiento
+      match /logs/{logId} {
+        allow read: if request.auth != null && (
+          isOwner(athleteId) || 
+          get(/databases/$(database)/documents/athletes/$(athleteId)).data.coachId == request.auth.uid
+        );
+        allow create: if isOwner(athleteId);
+      }
+    }
+
+    // Reglas para ejercicios y rutinas (Simplificadas para MVP)
+    match /exercises/{exerciseId} {
+      allow read: if request.auth != null;
+    }
+    
+    match /routines/{routineId} {
+      allow read: if request.auth != null;
+    }
+  }
+}
