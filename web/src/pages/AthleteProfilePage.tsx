@@ -8,13 +8,14 @@ import { db } from "../lib/firebase";
 export function AthleteProfilePage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { athletes, loading } = useAthletes();
+  const { athletes, loading, unbindDevice } = useAthletes();
   const { routines, loading: routinesLoading } = useRoutines();
   
   const [athlete, setAthlete] = useState<Athlete | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<Athlete>>({});
   const [saving, setSaving] = useState(false);
+  const [unbinding, setUnbinding] = useState(false);
   const [activeTab, setActiveTab] = useState("INFO"); // INFO, ROUTINES, STATS
 
   useEffect(() => {
@@ -69,6 +70,16 @@ export function AthleteProfilePage() {
        console.error("Error assigning routine:", err);
        alert("Error al asignar rutina");
     }
+  };
+
+  const handleUnbind = async () => {
+    if (!id || !window.confirm("¿Seguro que quieres liberar el dispositivo? El atleta podrá vincular un nuevo teléfono en su próximo login.")) return;
+    setUnbinding(true);
+    const res = await unbindDevice(id);
+    if (!res.success) {
+      alert(res.error || "Error al liberar");
+    }
+    setUnbinding(false);
   };
 
   if (loading || !athlete) {
@@ -254,6 +265,39 @@ export function AthleteProfilePage() {
                      <span className="text-[10px] font-bold text-tc-outline uppercase tracking-widest block">Progesión Último Mes</span>
                      <span className="font-bold text-tc-primary-fixed">+{athlete.stats.progressPercent}%</span>
                    </div>
+                </div>
+
+                {/* Device Binding Status */}
+                <div className="mt-8 pt-6 border-t border-white/5">
+                   <label className="text-[10px] font-bold text-tc-outline uppercase tracking-widest block mb-2">Seguridad: Device Binding</label>
+                   <div className="flex items-center justify-between bg-tc-surface-container-highest/50 p-4 rounded-xl border border-white/5">
+                     <div className="flex items-center gap-3">
+                       <span className={`material-symbols-outlined ${athlete.boundDeviceId ? 'text-tc-primary-fixed' : 'text-tc-outline-variant'}`}>
+                         {athlete.boundDeviceId ? 'phonelink_lock' : 'phonelink_setup'}
+                       </span>
+                       <div>
+                         <p className="text-xs font-bold uppercase tracking-tight">
+                           {athlete.boundDeviceId ? 'Dispositivo Vinculado' : 'Sin Dispositivo Vinculado'}
+                         </p>
+                         <p className="text-[10px] text-tc-outline-variant font-mono">
+                           ID: {athlete.boundDeviceId ? athlete.boundDeviceId.substring(0, 16) + '...' : '---'}
+                         </p>
+                       </div>
+                     </div>
+                     
+                     {athlete.boundDeviceId && (
+                       <button 
+                         onClick={handleUnbind}
+                         disabled={unbinding}
+                         className="px-3 py-1.5 bg-tc-error/10 text-tc-error border border-tc-error/20 rounded text-[10px] font-black uppercase tracking-widest hover:bg-tc-error/20 transition-all disabled:opacity-50"
+                       >
+                         {unbinding ? 'Liberando...' : 'Liberar Dispositivo'}
+                       </button>
+                     )}
+                   </div>
+                   <p className="text-[9px] text-tc-outline-variant mt-2 italic px-1">
+                     * Al liberar, el atleta podrá registrar su cuenta en un nuevo teléfono físico.
+                   </p>
                 </div>
               </div>
 

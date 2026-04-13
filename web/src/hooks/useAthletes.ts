@@ -23,6 +23,7 @@ export interface Athlete {
   notes: string;
   activeRoutineId?: string;
   activeRoutineName?: string;
+  boundDeviceId?: string | null;
   createdAt: unknown;
   stats: AthleteStats;
 }
@@ -119,5 +120,17 @@ export function useAthletes() {
     }
   };
 
-  return { athletes, loading, error, addAthlete, deleteAthlete };
+  const unbindDevice = async (athleteId: string): Promise<{ success: boolean; error?: string }> => {
+    if (!user) return { success: false, error: "No hay sesión activa" };
+    try {
+      const { updateDoc } = await import("firebase/firestore");
+      await updateDoc(doc(db, "athletes", athleteId), { boundDeviceId: null });
+      return { success: true };
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Error al liberar dispositivo";
+      return { success: false, error: message };
+    }
+  };
+
+  return { athletes, loading, error, addAthlete, deleteAthlete, unbindDevice };
 }

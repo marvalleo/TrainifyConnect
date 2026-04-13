@@ -4,6 +4,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'fire
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore';
 import { auth, db } from '../lib/firebase';
 import { theme } from '../theme/colors';
+import { getDeviceId } from '../lib/device';
 
 export function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -22,8 +23,30 @@ export function LoginScreen() {
 
     setLoading(true);
     try {
+      const currentDeviceId = await getDeviceId();
+
       if (mode === 'login') {
-        await signInWithEmailAndPassword(auth, email, password);
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Verificación de Device Binding
+        const q = query(collection(db, "athletes"), where("uid", "==", user.uid));
+        const querySnapshot = await getDocs(q);
+        
+        if (!querySnapshot.empty) {
+          const athleteDoc = querySnapshot.docs[0];
+          const data = athleteDoc.data();
+          
+          if (!data.boundDeviceId) {
+            // First time on this device after an update or manual registration: lock it in
+            await updateDoc(doc(db, "athletes", athleteDoc.id), {
+              boundDeviceId: currentDeviceId
+            });
+          } else if (data.boundDeviceId !== currentDeviceId) {
+            await auth.signOut();
+            throw new Error("Dispositivo no autorizado. Tu cuenta está enlazada a otro teléfono. Solicita a tu coach que la libere.");
+          }
+        }
       } else {
         // 1. Verificar si el atleta existe en Firestore (creado por coach)
         const q = query(collection(db, "athletes"), where("email", "==", email.toLowerCase()));
@@ -42,10 +65,11 @@ export function LoginScreen() {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 3. Vincular Auth UID con el documento de Firestore
+        // 3. Vincular Auth UID con el documento de Firestore y atar el dispositivo
         await updateDoc(doc(db, "athletes", athleteDoc.id), {
           uid: user.uid,
-          status: 'active'
+          status: 'active',
+          boundDeviceId: currentDeviceId
         });
 
         alert("¡Cuenta activada con éxito!");
